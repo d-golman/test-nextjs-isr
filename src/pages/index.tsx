@@ -53,6 +53,7 @@ export default function Index({ microphones }: IndexProps) {
   );
 }
 
+// помимо самой страницы, сгенерируются все странциы указаныне в Link
 export const getStaticProps: GetStaticProps = async () => {
   const db = await openDB();
   const microphones = await db.all(

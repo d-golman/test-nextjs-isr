@@ -1,4 +1,6 @@
-# youtube-2020-april-nextjs-part8
-Next.js SSG using getStaticPaths and getStaticProps
+# Приложение для проверки работы ISR
 
-Youtube Video: https://youtu.be/MxlmfI9IxVs
+Для запуска приложение необходимо выполнить команды:  
+npm install
+npm run-script build
+npm run-script start

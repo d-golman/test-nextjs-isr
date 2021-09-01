@@ -29,6 +29,8 @@ export default function MicrophoneDetail({
   );
 }
 
+// при revalidate: 10, страница автоматически обновляется каждые 10 секунд
+// для проверки можно изменить данные в базе и пообновлять странцу
 export const getStaticProps: GetStaticProps<MicrophoneDetailProps> = async (
   ctx
 ) => {
@@ -38,6 +40,9 @@ export const getStaticProps: GetStaticProps<MicrophoneDetailProps> = async (
 
   return { revalidate: 10, props: microphone };
 };
+
+// для первого рендера берет 10 страниц из базы,
+// из-за fallback: "blocking", последующие страницы дорендериваются при запросе пользователя
 
 export const getStaticPaths: GetStaticPaths<{ id: string; }> = async () => {
   const db = await openDB();
