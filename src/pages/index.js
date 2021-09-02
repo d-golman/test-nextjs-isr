@@ -4,16 +4,11 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import { GetStaticProps } from 'next';
 import Link from 'next/link';
-import { Microphone } from '../../model/Microphone';
 import { openDB } from '../openDB';
 
-export interface IndexProps {
-  microphones: Microphone[];
-}
 
-export default function Index({ microphones }: IndexProps) {
+export default function Index({ microphones }) {
   return (
     <Grid container spacing={3}>
       {microphones.map((microphone) => (
@@ -54,7 +49,7 @@ export default function Index({ microphones }: IndexProps) {
 }
 
 // помимо самой страницы, сгенерируются все странциы указаныне в Link
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps = async () => {
   const db = await openDB();
   const microphones = await db.all(
     'select * from microphone where id BETWEEN 1 AND 5'

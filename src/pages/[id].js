@@ -1,9 +1,9 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import { Microphone } from '../../model/Microphone';
+import { useEffect } from 'react';
+import { useState } from 'react';
 import { openDB } from '../openDB';
 
-export type MicrophoneDetailProps = Microphone;
 
 export default function MicrophoneDetail({
   id,
@@ -11,8 +11,14 @@ export default function MicrophoneDetail({
   model,
   price,
   imageUrl,
-}: MicrophoneDetailProps) {
+}) {
   const router = useRouter();
+  const [device, setDevice] = useState("desktop");
+  useEffect(() => {
+    if (router.query.device) {
+      setDevice(router.query.device);
+    }
+  });
 
   if (router.isFallback) {
     return <div>Loading......I'm sorry for the wait!!</div>;
@@ -20,6 +26,7 @@ export default function MicrophoneDetail({
 
   return (
     <div>
+      <p>{device}</p>
       <div>{id}</div>
       <div>{brand}</div>
       <div>{model}</div>
@@ -31,10 +38,10 @@ export default function MicrophoneDetail({
 
 // при revalidate: 10, страница автоматически обновляется каждые 10 секунд
 // для проверки можно изменить данные в базе и пообновлять странцу
-export const getStaticProps: GetStaticProps<MicrophoneDetailProps> = async (
+export const getStaticProps = async (
   ctx
 ) => {
-  const id = ctx.params.id as string;
+  const id = ctx.params.id;
   const db = await openDB();
   const microphone = await db.get('select * from microphone where id = ?', +id);
 
@@ -44,7 +51,7 @@ export const getStaticProps: GetStaticProps<MicrophoneDetailProps> = async (
 // для первого рендера берет 10 страниц из базы,
 // из-за fallback: "blocking", последующие страницы дорендериваются при запросе пользователя
 
-export const getStaticPaths: GetStaticPaths<{ id: string; }> = async () => {
+export const getStaticPaths = async () => {
   const db = await openDB();
   const microphones = await db.all('select * from microphone where id BETWEEN 1 AND 10');
   const paths = microphones.map((a) => {
@@ -52,7 +59,7 @@ export const getStaticPaths: GetStaticPaths<{ id: string; }> = async () => {
   });
 
   return {
-    fallback: "blocking",
+    fallback: true,
     paths,
   };
 };
